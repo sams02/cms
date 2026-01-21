@@ -8,7 +8,7 @@
 <body>
     <div class="container">
         <h2>Register</h2>
-        <form action="RegisterServlet" method="post" class="form">
+        <form action="/RegisterServlet" method="post" class="form">
             <div class="form-group">
                 <label>Username:</label>
                 <input type="text" name="username" required>
