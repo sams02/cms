@@ -16,7 +16,7 @@ public class ComplaintServlet extends HttpServlet {
         
         try {
             Class.forName("com.mysql.jdbc.Driver");
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/complaint_system", "root", "root75");
+            Connection conn = DriverManager.getConnection("mysql://root:ePwtrFhwKvLffKitMLDkuXTzennndpqW@mysql.railway.internal:3306/railway", "root", "ePwtrFhwKvLffKitMLDkuXTzennndpqW");
             
             if("add".equals(action)) {
                 String query = "INSERT INTO complaints (user_id, title, description, status, created_date) VALUES (?, ?, ?, ?, NOW())";
