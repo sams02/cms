@@ -21,8 +21,8 @@ public class RegisterServlet extends HttpServlet {
                host = "mysql.railway.internal";
                port = "3306";
                database="railway";
-               username="root";
-               password="ePwtrFhwKvLffKitMLDkuXTzennndpqW";
+               name="root";
+               pass="ePwtrFhwKvLffKitMLDkuXTzennndpqW";
           }
           
           String url = "mysql://root:ePwtrFhwKvLffKitMLDkuXTzennndpqW@mysql.railway.internal:3306/railway";
