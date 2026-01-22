@@ -10,10 +10,28 @@ public class RegisterServlet extends HttpServlet {
         String password = request.getParameter("password");
         String email = request.getParameter("email");
         
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection conn = DriverManager.getConnection("mysql://root:ePwtrFhwKvLffKitMLDkuXTzennndpqW@mysql.railway.internal:3306/railway", "root", "ePwtrFhwKvLffKitMLDkuXTzennndpqW");
-            
+            String host = System.getenv("mysql.railway.internal");
+            String port = System.getenv("3306");
+            String database = System.getenv("railway");
+            String name = System.getenv("root");
+            String pass = System.getenv("ePwtrFhwKvLffKitMLDkuXTzennndpqW");
+
+// Railway Internal Network Fallback
+          if (host == null) {
+               host = "mysql.railway.internal";
+               port = "3306";
+               database="railway";
+               username="root";
+               password="ePwtrFhwKvLffKitMLDkuXTzennndpqW";
+          }
+          
+          String url = "mysql://root:ePwtrFhwKvLffKitMLDkuXTzennndpqW@mysql.railway.internal:3306/railway";
+          
+          Connection conn = null;
+          try {
+              Class.forName("com.mysql.cj.jdbc.Driver");
+              conn = DriverManager.getConnection(url, name, pass);
+           
             String query = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
             PreparedStatement pst = conn.prepareStatement(query);
             pst.setString(1, username);
