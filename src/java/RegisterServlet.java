@@ -22,10 +22,10 @@ public class RegisterServlet extends HttpServlet {
                port = "3306";
                database="railway";
                name="root";
-               pass="ePwtrFhwKvLffKitMLDkuXTzennndpqW";
+               pass="WlnhxFRdYRheORYcVxEsjSdyHoIOPPBG";
           }
           
-          String url = "mysql://root:ePwtrFhwKvLffKitMLDkuXTzennndpqW@mysql.railway.internal:3306/railway";
+          String url = "mysql://root:WlnhxFRdYRheORYcVxEsjSdyHoIOPPBG@mysql.railway.internal:3306/railway";
           
           Connection conn = null;
           try {
