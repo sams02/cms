@@ -1,6 +1,6 @@
 FROM tomcat:9-jdk17
 
-COPY dist/*.war /usr/local/tomcat/webapps/ROOT.war
+COPY dist/*.war /usr/local/tomcat/webapps/CMS.war
 
 EXPOSE 8080
 
