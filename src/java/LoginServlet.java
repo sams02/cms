@@ -12,20 +12,28 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
 
         try {
-
-            // Load correct MySQL driver
+            
             Class.forName("com.mysql.cj.jdbc.Driver");
 
             // Railway environment variables
-            String host = System.getenv("MYSQLHOST");
-            String user = System.getenv("MYSQLUSER");
-            String pass = System.getenv("MYSQLPASSWORD");
-            String database = System.getenv("MYSQLDATABASE");
-            String port = System.getenv("MYSQLPORT");
+        String host = System.getenv("MYSQLHOST");
+        String port = System.getenv("MYSQLPORT");
+        String database = System.getenv("MYSQLDATABASE");
+        String user = System.getenv("MYSQLUSER");
+        String pass = System.getenv("MYSQLPASSWORD");
 
-            String url = "jdbc:mysql://mysql.railway.internal:3306/railway?useSSL=false";
+        // Local/test defaults (host/port/database only)
+        if (host == null || host.isEmpty()) host = "mysql.railway.internal";
+        if (port == null || port.isEmpty()) port = "3306";
+        if (database == null || database.isEmpty()) database = "railway";
 
-            Connection conn = DriverManager.getConnection(url, user, pass);
+        // Credentials must be provided via env in production
+          if (user == null || user.isEmpty() || pass == null || pass.isEmpty()) {
+                 throw new ServletException("Database credentials (MYSQLUSER/MYSQLPASSWORD) are not set");
+            }
+
+           String url = String.format("jdbc:mysql://%s:%s/%s?useSSL=false&allowPublicKeyRetrieval=true", host, port, database);
+           Connection conn = DriverManager.getConnection(url, user, pass);
 
             String query = "SELECT id FROM users WHERE username=? AND password=?";
             PreparedStatement pst = conn.prepareStatement(query);

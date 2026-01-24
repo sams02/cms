@@ -12,34 +12,29 @@ public class RegisterServlet extends HttpServlet {
         String password = request.getParameter("password");
         String email = request.getParameter("email");
 
-        Connection conn = null;
-
-        try {
-
-            // Load Driver
+        try{
+            
             Class.forName("com.mysql.cj.jdbc.Driver");
+        // Railway environment variables
+        String host = System.getenv("MYSQLHOST");
+        String port = System.getenv("MYSQLPORT");
+        String database = System.getenv("MYSQLDATABASE");
+        String user = System.getenv("MYSQLUSER");
+        String pass = System.getenv("MYSQLPASSWORD");
 
-            // Railway Environment Variables
-            String host = System.getenv("MYSQLHOST");
-            String port = System.getenv("MYSQLPORT");
-            String database = System.getenv("MYSQLDATABASE");
-            String user = System.getenv("MYSQLUSER");
-            String pass = System.getenv("MYSQLPASSWORD");
+        // Local/test defaults (host/port/database only)
+        if (host == null || host.isEmpty()) host = "mysql.railway.internal";
+        if (port == null || port.isEmpty()) port = "3306";
+        if (database == null || database.isEmpty()) database = "railway";
 
-            // Fallback (Local Testing)
-            if (host == null) {
-                host = "mysql.railway.internal";
-                port = "3306";
-                database = "railway";
-                user = "root";
-                pass = "WlnhxFRdYRheORYcVxEsjSdyHoIOPPBG";
+        // Credentials must be provided via env in production
+          if (user == null || user.isEmpty() || pass == null || pass.isEmpty()) {
+                 throw new ServletException("Database credentials (MYSQLUSER/MYSQLPASSWORD) are not set");
             }
 
-            // Correct JDBC URL
-            String url = "jdbc:mysql://mysql.railway.internal:3306/railway?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
-
-            conn = DriverManager.getConnection(url, user, pass);
-
+           String url = String.format("jdbc:mysql://%s:%s/%s?useSSL=false&allowPublicKeyRetrieval=true", host, port, database);
+           Connection conn = DriverManager.getConnection(url, user, pass);
+           
             String query = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
 
             PreparedStatement pst = conn.prepareStatement(query);

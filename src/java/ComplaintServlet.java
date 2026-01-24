@@ -6,18 +6,25 @@ import java.sql.*;
 public class ComplaintServlet extends HttpServlet {
 
     private Connection getConnection() throws Exception {
+    Class.forName("com.mysql.cj.jdbc.Driver");
 
-        Class.forName("com.mysql.cj.jdbc.Driver");
+    String host = System.getenv("MYSQLHOST");
+    String user = System.getenv("MYSQLUSER");
+    String pass = System.getenv("MYSQLPASSWORD");
+    String database = System.getenv("MYSQLDATABASE");
+    String port = System.getenv("MYSQLPORT");
 
-        String host = System.getenv("MYSQLHOST");
-        String user = System.getenv("MYSQLUSER");
-        String pass = System.getenv("MYSQLPASSWORD");
-        String database = System.getenv("MYSQLDATABASE");
-        String port = System.getenv("MYSQLPORT");
+    // Local/test defaults for host/port/database only — credentials must come from env
+    if (host == null || host.isEmpty()) host = "mysql.railway.internal";
+    if (port == null || port.isEmpty()) port = "3306";
+    if (database == null || database.isEmpty()) database = "railway";
 
-        String url = "jdbc:mysql://mysql.railway.internal:3306/railway?useSSL=false";
+    if (user == null || user.isEmpty() || pass == null || pass.isEmpty()) {
+        throw new IllegalStateException("Database credentials (MYSQLUSER/MYSQLPASSWORD) are not set");
+    }
 
-        return DriverManager.getConnection(url, user, pass);
+    String url = String.format("jdbc:mysql://%s:%s/%s?useSSL=false&allowPublicKeyRetrieval=true", host, port, database);
+    return DriverManager.getConnection(url, user, pass);    
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
